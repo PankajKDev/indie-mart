@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import HealthRoute from "./routes/healthcheck.routes.js";
+import AuthRoute from "./routes/auth.route.js";
 import session from "express-session";
 import passport from "passport";
 import "./strategies/local-auth-strat.js";
@@ -34,5 +35,9 @@ app.use(cookieParser());
 
 //routes
 app.use("/api/v1/health", HealthRoute);
-// app.use("/api/v1/auth",au)
+app.use("/api/v1/auth", AuthRoute);
+app.get("/api/status", (req, res) => {
+  console.log(req.user);
+  return req.user ? res.send(req.user) : res.sendStatus(401);
+});
 export { app };

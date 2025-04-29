@@ -3,6 +3,22 @@ import { Strategy } from "passport-local";
 import { users } from "../constants.js";
 import { ApiError } from "../utils/ApiError.js";
 
+passport.serializeUser((user, done) => {
+  console.log(`serialize:${user}`);
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  console.log(`deserialize:${id}`);
+  try {
+    const findUser = users.find((user) => user.id === id);
+    if (!findUser) throw new ApiError(401, "user not found");
+    done(null, findUser);
+  } catch (error) {
+    done(error, null);
+  }
+});
+
 export default passport.use(
   //passing an instance of strategy
   new Strategy((username, password, done) => {
